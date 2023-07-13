@@ -39,14 +39,6 @@
         "chunks": [],
         "async": false
       }
-    },
-    "(app-client)/./node_modules/next/dist/client/image-component.js": {
-      "*": {
-        "id": "(sc_client)/./node_modules/next/dist/client/image-component.js",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
     }
   },
   "edgeSSRModuleMapping": {},
@@ -131,22 +123,6 @@
       ],
       "async": false
     },
-    "/Users/miguel.pasa/Documents/projects/miguelpasa.github.io/node_modules/next/dist/client/image-component.js": {
-      "id": "(app-client)/./node_modules/next/dist/client/image-component.js",
-      "name": "*",
-      "chunks": [
-        "app/page:static/chunks/app/page.js"
-      ],
-      "async": false
-    },
-    "/Users/miguel.pasa/Documents/projects/miguelpasa.github.io/node_modules/next/dist/esm/client/image-component.js": {
-      "id": "(app-client)/./node_modules/next/dist/client/image-component.js",
-      "name": "*",
-      "chunks": [
-        "app/page:static/chunks/app/page.js"
-      ],
-      "async": false
-    },
     "/Users/miguel.pasa/Documents/projects/miguelpasa.github.io/node_modules/next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"]}],\"variableName\":\"inter\"}": {
       "id": "(app-client)/./node_modules/next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"]}],\"variableName\":\"inter\"}",
       "name": "*",
@@ -165,9 +141,9 @@
     }
   },
   "entryCSSFiles": {
-    "/Users/miguel.pasa/Documents/projects/miguelpasa.github.io/app/page": [],
     "/Users/miguel.pasa/Documents/projects/miguelpasa.github.io/app/layout": [
       "static/css/app/layout.css"
-    ]
+    ],
+    "/Users/miguel.pasa/Documents/projects/miguelpasa.github.io/app/page": []
   }
 }
