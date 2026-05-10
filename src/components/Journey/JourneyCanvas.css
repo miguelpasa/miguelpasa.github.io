@@ -1,0 +1,52 @@
+.journey {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.journey__path-bg {
+  stroke: rgba(17, 17, 17, 0.10);
+  stroke-width: 1px;
+}
+
+.journey__trail {
+  stroke: var(--ink);
+  stroke-width: 2px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.journey__dot {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 50%;
+  background: var(--ink);
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  will-change: transform;
+}
+
+.journey__dot::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  opacity: 0.18;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey,
+  .journey__dot {
+    display: none;
+  }
+}

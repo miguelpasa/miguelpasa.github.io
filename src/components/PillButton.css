@@ -1,0 +1,44 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 0.7em 1.5em;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--pill-radius);
+  background: transparent;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: var(--fs-body);
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition: background 0.35s var(--ease-out-expo), color 0.35s var(--ease-out-expo),
+    transform 0.4s var(--ease-out-expo);
+  user-select: none;
+  text-decoration: none;
+}
+
+.pill:hover {
+  background: var(--ink);
+  color: var(--ink-inv);
+  transform: translateY(-2px);
+}
+
+.pill:active {
+  transform: translateY(0);
+}
+
+.pill--sm {
+  padding: 0.5em 1.1em;
+  font-size: var(--fs-micro);
+}
+
+.pill--invert {
+  border-color: var(--ink-inv);
+  color: var(--ink-inv);
+}
+
+.pill--invert:hover {
+  background: var(--ink-inv);
+  color: var(--ink);
+}

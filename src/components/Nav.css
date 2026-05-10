@@ -1,0 +1,47 @@
+.nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 50;
+  padding: 22px var(--pad-x);
+  color: var(--ink);
+  transition: color 0.4s var(--ease-out-expo);
+  mix-blend-mode: normal;
+}
+
+.nav--invert {
+  color: var(--ink-inv);
+}
+
+.nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: clamp(20px, 2.4vw, 36px);
+}
+
+.nav a {
+  font-weight: 700;
+  font-size: var(--fs-micro);
+  letter-spacing: -0.005em;
+  position: relative;
+  padding: 4px 2px;
+}
+
+.nav a::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  bottom: -2px;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.nav a:hover::after {
+  transform: scaleX(1);
+}
