@@ -6,61 +6,61 @@
   overflow: hidden;
 }
 
-/* Subtle wall tint behind everything */
 .climber__wall {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, #dcdcdc 0%, #d4d4d4 100%);
 }
 
-/* Ladder column: positioned via inline style (left: 50%), tall element that
-   modulo-translates upward as the user scrolls. */
+/* Ladder — ~25% of viewport width, centered. Rails are CSS borders so they
+   scale; rungs are spans with var(--rs) spacing set from JS. */
 .climber__ladder {
   position: absolute;
-  top: -64px; /* one rung-spacing above viewport so the cycle is seamless */
-  width: 64px;
-  margin-left: -32px;
+  top: 0; /* JS offsets via transform; layoutLadder sizes height + populates rungs */
+  width: clamp(220px, 25vw, 480px);
+  margin-left: calc(-1 * clamp(220px, 25vw, 480px) / 2);
   will-change: transform;
+  --rs: 100px;
 }
 
 .climber__rail {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 3px;
+  width: max(5px, 0.35vw);
   background: var(--ink);
-  border-radius: 2px;
-  opacity: 0.85;
+  border-radius: 3px;
+  opacity: 0.88;
 }
 
 .climber__rail--left {
-  left: 6px;
+  left: 6%;
 }
 
 .climber__rail--right {
-  right: 6px;
+  right: 6%;
 }
 
 .climber__rung {
   position: absolute;
-  left: 6px;
-  right: 6px;
-  height: 3px;
+  left: 6%;
+  right: 6%;
+  height: max(3px, 0.22vw);
   background: var(--ink);
   border-radius: 2px;
-  opacity: 0.85;
+  opacity: 0.88;
 }
 
-/* Stick figure. Fixed in the viewport, sits ON the ladder. The 80px-tall
-   viewBox places its centre near y=0; we then translate it down 50vh to sit
-   in viewport centre. */
+/* Stick figure — taller, centered on the ladder. Height drives the size;
+   the SVG's preserveAspectRatio handles the rest. */
 .climber__figure {
   position: fixed;
   top: 50%;
-  width: 70px;
-  height: 100px;
-  margin-left: -35px;
-  margin-top: -10px; /* nudge so legs land on a rung */
+  left: 50%;
+  height: min(60vh, 560px);
+  aspect-ratio: 60 / 110;
+  margin-top: calc(-1 * min(60vh, 560px) / 2);
+  margin-left: calc(-1 * min(60vh, 560px) * 60 / 110 / 2);
   overflow: visible;
   z-index: 3;
 }
@@ -75,13 +75,13 @@
 
 .climber__body {
   stroke: var(--ink);
-  stroke-width: 3;
+  stroke-width: 2.4;
   stroke-linecap: round;
 }
 
 .climber__limb {
   stroke: var(--ink);
-  stroke-width: 2.5;
+  stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
   fill: none;
@@ -98,11 +98,14 @@
   }
 }
 
-/* On narrow screens, shrink the ladder + figure, keep them centred. */
 @media (max-width: 720px) {
+  .climber__ladder {
+    width: clamp(160px, 38vw, 240px);
+    margin-left: calc(-1 * clamp(160px, 38vw, 240px) / 2);
+  }
   .climber__figure {
-    width: 56px;
-    height: 80px;
-    margin-left: -28px;
+    height: min(48vh, 360px);
+    margin-top: calc(-1 * min(48vh, 360px) / 2);
+    margin-left: calc(-1 * min(48vh, 360px) * 60 / 110 / 2);
   }
 }
