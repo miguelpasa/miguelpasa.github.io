@@ -10,12 +10,6 @@ type Props = {
   spec: WaypointSpec;
 };
 
-/**
- * One waypoint section. Total height = (travelVh + holdVh) * 100vh.
- * Inside, content is sticky-centered so it stays in the viewport while the
- * user scrolls through the section. Bullets reveal one-by-one tied to the
- * local scroll progress (during the hold portion).
- */
 export function Waypoint({ spec }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
   const reduced = usePrefersReducedMotion();
@@ -26,10 +20,11 @@ export function Waypoint({ spec }: Props) {
     const el = sectionRef.current;
     if (!el || reduced) return;
 
-    const totalVh = spec.travelVh + spec.holdVh;
-    const travelRatio = spec.travelVh / Math.max(totalVh, 0.0001);
     const bulletsCount = spec.bullets?.length ?? 0;
 
+    // Overlap fade: content reaches full opacity by 30% in, holds until 70%,
+    // then fades. Adjacent sections' fades overlap so transitions feel
+    // continuous — no dead-air "extra scroll" between sections.
     const tween = gsap.to(
       {},
       {
@@ -40,21 +35,21 @@ export function Waypoint({ spec }: Props) {
           scrub: 0.4,
           onUpdate: (self) => {
             const p = self.progress;
-            // Fade in during enter, full opacity during the bulk, fade out at exit.
-            const fadeIn = Math.min(1, p / 0.15);
-            const fadeOut = Math.min(1, (1 - p) / 0.15);
+            const fadeIn = Math.min(1, Math.max(0, (p - 0.15) / 0.2));
+            const fadeOut = Math.min(1, Math.max(0, (0.85 - p) / 0.2));
             setContentOpacity(Math.min(fadeIn, fadeOut));
 
             if (bulletsCount > 0) {
-              // Map progress through the section to a 0..1 "hold progress":
-              // before travelRatio → 0 bullets; after travelRatio → bullets reveal
-              // across the remaining range.
-              const holdStart = travelRatio * 0.6; // start revealing slightly into the section
-              const holdLocal =
-                p <= holdStart
+              // Bullets reveal across the middle 50% of the section
+              const revealStart = 0.3;
+              const revealEnd = 0.8;
+              const local =
+                p <= revealStart
                   ? 0
-                  : Math.min(1, (p - holdStart) / (0.95 - holdStart));
-              const revealed = Math.floor(holdLocal * (bulletsCount + 1));
+                  : p >= revealEnd
+                    ? 1
+                    : (p - revealStart) / (revealEnd - revealStart);
+              const revealed = Math.floor(local * (bulletsCount + 1));
               setActiveBullets(Math.min(bulletsCount, revealed));
             }
           },
@@ -66,10 +61,8 @@ export function Waypoint({ spec }: Props) {
       tween.scrollTrigger?.kill();
       tween.kill();
     };
-  }, [reduced, spec.travelVh, spec.holdVh, spec.bullets]);
+  }, [reduced, spec.vh, spec.bullets]);
 
-  const totalVh = spec.travelVh + spec.holdVh;
-  // For reduced motion, just show all bullets
   const visibleBullets = reduced ? spec.bullets?.length ?? 0 : activeBullets;
 
   return (
@@ -77,7 +70,7 @@ export function Waypoint({ spec }: Props) {
       ref={sectionRef}
       className={`wp wp--${spec.side}`}
       data-id={spec.id}
-      style={{ minHeight: `${Math.max(totalVh, 1) * 100}vh` }}
+      style={{ minHeight: `${Math.max(spec.vh, 1) * 100}vh` }}
       id={spec.id}
     >
       <div className="wp__sticky">
