@@ -24,3 +24,7 @@ export function stopLenis() {
   lenis?.destroy();
   lenis = null;
 }
+
+export function getLenis() {
+  return lenis;
+}

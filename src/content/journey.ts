@@ -1,22 +1,17 @@
 import { resume } from './resume';
 
-export type Side = 'left' | 'right' | 'center';
+export type Side = 'left' | 'right';
 
 export type WaypointSpec = {
   id: string;
-  /** Which side of the viewport the dot anchors on. Content sits opposite. */
+  /** Which side of the ladder the window sits on */
   side: Side;
-  /** Viewport heights this section occupies. Dot transits this whole range. */
+  /** Viewport heights this section occupies */
   vh: number;
-  /** Optional kind tag (e.g. dates) */
   kind?: string;
-  /** Optional eyebrow line above headline */
   eyebrow?: string;
-  /** Headline (display size) */
   headline: string;
-  /** Sub-line under headline */
   sub?: string;
-  /** Bullets revealed one-by-one as scroll moves through the section */
   bullets?: string[];
 };
 
@@ -25,14 +20,14 @@ const exp = resume.experience;
 export const waypoints: WaypointSpec[] = [
   {
     id: 'hero',
-    side: 'center',
+    side: 'right',
     vh: 1.2,
     headline: resume.name,
     sub: resume.role,
   },
   {
     id: 'hello',
-    side: 'left',
+    side: 'right',
     vh: 1.3,
     eyebrow: 'Hey,',
     headline: "I'm Miguel.",
@@ -40,7 +35,7 @@ export const waypoints: WaypointSpec[] = [
   },
   {
     id: 'about',
-    side: 'right',
+    side: 'left',
     vh: 1.6,
     eyebrow: "I'm a",
     headline: 'Full-stack engineer.',
@@ -48,7 +43,7 @@ export const waypoints: WaypointSpec[] = [
   },
   {
     id: 'build',
-    side: 'left',
+    side: 'right',
     vh: 1.8,
     eyebrow: 'I build',
     headline: 'Things on the web.',
@@ -60,7 +55,7 @@ export const waypoints: WaypointSpec[] = [
   },
   ...exp.map<WaypointSpec>((role, i) => ({
     id: `role-${i}`,
-    side: i % 2 === 0 ? 'right' : 'left',
+    side: i % 2 === 0 ? 'left' : 'right',
     vh: 1.0 + role.bullets.length * 0.5,
     kind: role.period,
     eyebrow: role.role,
@@ -99,7 +94,7 @@ export const waypoints: WaypointSpec[] = [
   },
   {
     id: 'contact',
-    side: 'center',
+    side: 'left',
     vh: 1.6,
     eyebrow: 'Get in touch',
     headline: "Let's talk.",

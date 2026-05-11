@@ -1,0 +1,101 @@
+.climber {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Subtle wall tint behind everything */
+.climber__wall {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #dcdcdc 0%, #d4d4d4 100%);
+}
+
+/* Ladder column: positioned via inline style (left: 50%), tall element that
+   modulo-translates upward as the user scrolls. */
+.climber__ladder {
+  position: absolute;
+  top: -64px; /* one rung-spacing above viewport so the cycle is seamless */
+  width: 64px;
+  margin-left: -32px;
+  will-change: transform;
+}
+
+.climber__rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--ink);
+  border-radius: 2px;
+  opacity: 0.85;
+}
+
+.climber__rail--left {
+  left: 6px;
+}
+
+.climber__rail--right {
+  right: 6px;
+}
+
+.climber__rung {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  height: 3px;
+  background: var(--ink);
+  border-radius: 2px;
+  opacity: 0.85;
+}
+
+/* Stick figure. Fixed in the viewport, sits ON the ladder. The 80px-tall
+   viewBox places its centre near y=0; we then translate it down 50vh to sit
+   in viewport centre. */
+.climber__figure {
+  position: fixed;
+  top: 50%;
+  width: 70px;
+  height: 100px;
+  margin-left: -35px;
+  margin-top: -10px; /* nudge so legs land on a rung */
+  overflow: visible;
+  z-index: 3;
+}
+
+.climber__head-group {
+  fill: var(--ink);
+}
+
+.climber__head-group circle {
+  fill: var(--ink);
+}
+
+.climber__body,
+.climber__limb {
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.climber__hand {
+  fill: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .climber {
+    display: none;
+  }
+}
+
+/* On narrow screens, shrink the ladder + figure, keep them centred. */
+@media (max-width: 720px) {
+  .climber__figure {
+    width: 56px;
+    height: 80px;
+    margin-left: -28px;
+  }
+}
