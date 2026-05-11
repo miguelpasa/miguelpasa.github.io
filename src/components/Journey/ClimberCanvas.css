@@ -73,15 +73,22 @@
   fill: var(--ink);
 }
 
-.climber__body,
+.climber__body {
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
 .climber__limb {
   stroke: var(--ink);
   stroke-width: 2.5;
   stroke-linecap: round;
+  stroke-linejoin: round;
   fill: none;
 }
 
-.climber__hand {
+.climber__hand,
+.climber__foot {
   fill: var(--ink);
 }
 
