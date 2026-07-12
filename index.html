@@ -1,17 +1,452 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#E2E2E2" />
-    <title>Miguel Pasa — Senior Software Engineer</title>
-    <meta name="description" content="Miguel Pasa — Melbourne-based senior full-stack engineer. React, TypeScript, Java, AWS." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700;800&display=swap" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miguel Pasa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,500;9..40,800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --orange: #F5A623;
+            --green:  #1DB97B;
+            --navy:   #1B2B5E;
+            --coral:  #E05C40;
+            --bg:     #EDE9E0;
+        }
+
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background: var(--bg);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        /* ── Pages ─────────────────────────────────────── */
+        #home {
+            position: fixed; inset: 0; z-index: 1;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg);
+        }
+
+        #summary, #experience, #work {
+            position: fixed; inset: 0;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: flex-start;
+            padding: 0 clamp(24px, 7vw, 80px);
+            overflow: hidden;
+            clip-path: circle(0px at 50% 50%);
+            pointer-events: none;
+            will-change: clip-path;
+        }
+
+        #summary    { z-index: 2; background: var(--green); }
+        #experience { z-index: 3; background: var(--navy);  }
+        #work       { z-index: 4; background: var(--coral); }
+
+        /* ── Intro circles ──────────────────────────────── */
+        .circle {
+            position: absolute; top: 50%; left: 50%;
+            width: 80px; height: 80px; border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            will-change: transform;
+        }
+        .circle.go { animation: burst 0.45s cubic-bezier(0.16, 1, 0.3, 1) var(--delay) both; }
+        #c1 { background: #EFC040; }
+        #c2 { background: #E89018; }
+        #c3 { background: #DC720C; }
+        #c4 { background: var(--orange); }
+
+        @keyframes burst {
+            from { transform: translate(-50%, -50%) scale(0); }
+            to   { transform: translate(-50%, -50%) scale(var(--s, 35)); }
+        }
+
+        /* ── Home text ──────────────────────────────────── */
+        .home-text { position: relative; z-index: 1; text-align: center; }
+
+        #name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3.5rem, 13vw, 11rem);
+            font-weight: 400; letter-spacing: 0.05em; padding-left: 0.05em;
+            text-transform: uppercase; color: var(--navy);
+            white-space: nowrap; opacity: 0; transform: translateY(10px);
+            will-change: opacity, transform;
+        }
+        #name.go { animation: rise 0.8s cubic-bezier(0.33, 1, 0.68, 1) 1.75s both; }
+
+        #tagline {
+            font-size: 0.75rem; font-weight: 500;
+            letter-spacing: 0.22em; padding-left: 0.22em;
+            text-transform: uppercase; color: rgba(27, 43, 94, 0.5);
+            margin-top: 14px; opacity: 0; transform: translateY(8px);
+            will-change: opacity, transform;
+        }
+        #tagline.go { animation: rise 0.8s cubic-bezier(0.33, 1, 0.68, 1) 2.0s both; }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Page inner ─────────────────────────────────── */
+        .page-inner { max-width: 760px; width: 100%; }
+
+        .page-eyebrow {
+            font-size: 0.6875rem; font-weight: 500;
+            letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 14px;
+        }
+
+        .page-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(5rem, 20vw, 16rem);
+            font-weight: 400; letter-spacing: 0.04em; padding-left: 0.04em;
+            text-transform: uppercase; line-height: 0.9;
+        }
+
+        /* Per-page heading colors (title = previous page's bg color) */
+        #summary    .page-eyebrow { color: rgba(255, 255, 255, 0.45); }
+        #summary    .page-title   { color: var(--orange); }
+        #experience .page-eyebrow { color: rgba(255, 255, 255, 0.45); }
+        #experience .page-title   { color: var(--green);  }
+        #work       .page-eyebrow { color: rgba(27, 43, 94, 0.45); }
+        #work       .page-title   { color: var(--navy);   }
+
+        /* ── Summary body ───────────────────────────────── */
+        .page-bio {
+            margin-top: 20px;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            font-weight: 500; line-height: 1.65; max-width: 52ch;
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        .page-skills {
+            margin-top: 14px;
+            font-size: 0.6875rem; font-weight: 500;
+            letter-spacing: 0.18em; text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ── Experience jobs ────────────────────────────── */
+        .job-list {
+            list-style: none; margin-top: 24px;
+            display: flex; flex-direction: column; gap: 18px;
+        }
+
+        .job-header { display: flex; align-items: baseline; gap: 14px; }
+
+        .job-co {
+            font-size: 0.875rem; font-weight: 800;
+            letter-spacing: 0.08em; text-transform: uppercase; color: var(--green);
+        }
+
+        .job-date {
+            font-size: 0.6875rem; font-weight: 500;
+            letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.5);
+        }
+
+        .job-role {
+            margin-top: 2px; font-size: 0.6875rem; font-weight: 500;
+            letter-spacing: 0.18em; text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        /* ── Education ──────────────────────────────────── */
+        .edu {
+            margin-top: 28px; padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            display: flex; flex-direction: column; gap: 4px;
+        }
+
+        .edu-name {
+            font-size: 0.875rem; font-weight: 800;
+            letter-spacing: 0.08em; text-transform: uppercase; color: var(--green);
+        }
+
+        .edu-detail {
+            font-size: 0.6875rem; font-weight: 500;
+            letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ── Work / Projects ────────────────────────────── */
+        .project-list {
+            margin-top: 28px;
+            display: flex; flex-direction: column;
+        }
+
+        .project {
+            display: flex; align-items: flex-start; gap: 24px;
+            padding: 22px 0;
+            border-top: 1px solid rgba(27, 43, 94, 0.15);
+        }
+
+        .project:last-child { border-bottom: 1px solid rgba(27, 43, 94, 0.15); }
+
+        .project-num {
+            font-size: 0.6875rem; font-weight: 500;
+            letter-spacing: 0.18em; color: rgba(27, 43, 94, 0.35);
+            padding-top: 5px; min-width: 20px;
+        }
+
+        .project-body { display: flex; flex-direction: column; gap: 4px; }
+
+        .project-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.8rem, 5.5vw, 3.5rem);
+            letter-spacing: 0.04em; padding-left: 0.04em;
+            text-transform: uppercase; line-height: 1;
+            color: var(--navy);
+        }
+
+        .project-desc {
+            font-size: 0.8125rem; font-weight: 500;
+            line-height: 1.55; color: rgba(27, 43, 94, 0.65);
+        }
+
+        .project-link {
+            display: inline-block; margin-top: 6px;
+            font-size: 0.6875rem; font-weight: 500;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            text-decoration: none; color: rgba(27, 43, 94, 0.5);
+            border-bottom: 1px solid rgba(27, 43, 94, 0.2); padding-bottom: 1px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .project-link:hover { color: var(--navy); border-color: var(--navy); }
+
+        /* ── Nav pill ───────────────────────────────────── */
+        #main-nav {
+            position: fixed; bottom: 32px; left: 50%;
+            transform: translateX(-50%); z-index: 15;
+            display: flex; gap: 4px; border-radius: 100px; padding: 6px;
+            opacity: 0; pointer-events: none;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            background: rgba(27, 43, 94, 0.9);
+        }
+
+        #main-nav.visible {
+            animation: nav-in 0.5s cubic-bezier(0.33, 1, 0.68, 1) 2.3s both;
+            pointer-events: auto;
+        }
+
+        @keyframes nav-in {
+            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .nav-link {
+            display: block; padding: 8px 20px; border-radius: 100px;
+            font-size: 0.8125rem; font-weight: 500;
+            letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
+            color: rgba(255, 255, 255, 0.4); cursor: pointer;
+            transition: color 0.2s, background 0.2s;
+        }
+
+        .nav-link.active { background: #fff; color: var(--navy); }
+
+        body.on-summary #main-nav    { background: rgba(10, 30, 18, 0.88); }
+        body.on-summary .nav-link    { color: rgba(255, 255, 255, 0.4); }
+        body.on-summary .nav-link.active { background: #fff; color: var(--green); }
+
+        body.on-experience #main-nav { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); }
+        body.on-experience .nav-link { color: rgba(255, 255, 255, 0.4); }
+        body.on-experience .nav-link.active { background: #fff; color: var(--navy); }
+
+        body.on-work #main-nav       { background: rgba(140, 35, 15, 0.82); }
+        body.on-work .nav-link       { color: rgba(255, 255, 255, 0.45); }
+        body.on-work .nav-link.active { background: #fff; color: var(--coral); }
+
+        /* ── Reduced motion ─────────────────────────────── */
+        @media (prefers-reduced-motion: reduce) {
+            .circle { animation: none !important; transform: translate(-50%, -50%) scale(var(--s, 35)) !important; }
+            #c1, #c2, #c3 { display: none; }
+            #name, #tagline { animation: none !important; opacity: 1 !important; transform: none !important; }
+            #main-nav { animation: none !important; opacity: 1 !important; pointer-events: auto; }
+            body { background: var(--orange); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="main-nav">
+        <a class="nav-link active" data-target="home">Home</a>
+        <a class="nav-link" data-target="summary">Summary</a>
+        <a class="nav-link" data-target="experience">Experience</a>
+        <a class="nav-link" data-target="work">Work</a>
+    </nav>
+
+    <!-- Home -->
+    <section id="home">
+        <div class="circle" id="c1"></div>
+        <div class="circle" id="c2"></div>
+        <div class="circle" id="c3"></div>
+        <div class="circle" id="c4"></div>
+        <div class="home-text">
+            <h1 id="name">Miguel Pasa</h1>
+            <p id="tagline">Full Stack Senior Engineer · Melbourne</p>
+        </div>
+    </section>
+
+    <!-- Summary -->
+    <section id="summary">
+        <div class="page-inner">
+            <p class="page-eyebrow">At a Glance</p>
+            <h2 class="page-title">Summary</h2>
+            <p class="page-bio">Full Stack Senior Engineer with 8 years building scalable web apps and APIs. Expert in React, TypeScript, Java Spring Boot and AWS cloud architectures. Based in Melbourne.</p>
+            <p class="page-skills">React · TypeScript · Java · Spring Boot · Node.js · AWS · NextJS</p>
+        </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience">
+        <div class="page-inner">
+            <p class="page-eyebrow">Work &amp; Career</p>
+            <h2 class="page-title">Experience</h2>
+            <ul class="job-list">
+                <li>
+                    <div class="job-header">
+                        <span class="job-co">Slalom</span>
+                        <span class="job-date">Mar 2022 – Present</span>
+                    </div>
+                    <p class="job-role">Senior Engineer</p>
+                </li>
+                <li>
+                    <div class="job-header">
+                        <span class="job-co">Deloitte Digital</span>
+                        <span class="job-date">Mar 2019 – Mar 2022</span>
+                    </div>
+                    <p class="job-role">Senior Consultant</p>
+                </li>
+                <li>
+                    <div class="job-header">
+                        <span class="job-co">Deloitte Digital</span>
+                        <span class="job-date">Jan 2017 – Aug 2018</span>
+                    </div>
+                    <p class="job-role">Engineer / Intern</p>
+                </li>
+            </ul>
+            <div class="edu">
+                <span class="edu-name">RMIT University</span>
+                <span class="edu-detail">Bachelor of Software Engineering · 2015–2018</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work -->
+    <section id="work">
+        <div class="page-inner">
+            <p class="page-eyebrow">Selected Work</p>
+            <h2 class="page-title">Work</h2>
+            <div class="project-list">
+                <div class="project">
+                    <span class="project-num">01</span>
+                    <div class="project-body">
+                        <h3 class="project-name">Shierly Therapy</h3>
+                        <p class="project-desc">Psychotherapy &amp; counselling practice website. Booking, services overview and telehealth across Australia.</p>
+                        <a class="project-link" href="https://shierlytherapy.com.au" target="_blank" rel="noopener noreferrer">shierlytherapy.com.au ↗</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const circleR = 40;
+        const s = Math.ceil(Math.hypot(window.innerWidth, window.innerHeight) / 2 / circleR) + 2;
+
+        const introDelays = { c1: '0.2s', c2: '0.5s', c3: '0.8s', c4: '1.1s' };
+        Object.entries(introDelays).forEach(([id, delay]) => {
+            const el = document.getElementById(id);
+            el.style.setProperty('--s', s);
+            el.style.setProperty('--delay', delay);
+        });
+
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            document.querySelectorAll('.circle').forEach(el => el.classList.add('go'));
+            document.getElementById('name').classList.add('go');
+            document.getElementById('tagline').classList.add('go');
+            document.getElementById('main-nav').classList.add('visible');
+        }));
+
+        setTimeout(() => {
+            document.querySelectorAll('.circle').forEach(el => {
+                el.style.animation = 'none';
+                el.style.transform = `translate(-50%, -50%) scale(${s})`;
+            });
+        }, 1700);
+
+        const pages     = ['home', 'summary', 'experience', 'work'];
+        const bodyClass = { home: '', summary: 'on-summary', experience: 'on-experience', work: 'on-work' };
+        const MAX_R     = Math.ceil(Math.hypot(window.innerWidth, window.innerHeight) / 2) + 10;
+        const INTRO_END = Date.now() + 2600;
+        const SENS      = 600;
+
+        let totalProgress = 0;
+        let snapTimer = null;
+
+        function applyProgress(p, animate) {
+            pages.forEach((id, i) => {
+                if (i === 0) return;
+                const pageP  = Math.max(0, Math.min(1, p - (i - 1)));
+                const radius = pageP * MAX_R;
+                const el     = document.getElementById(id);
+                el.style.transition   = animate
+                    ? 'clip-path 0.5s cubic-bezier(0.33, 1, 0.68, 1)'
+                    : 'clip-path 0s linear';
+                el.style.clipPath      = `circle(${radius}px at 50% 50%)`;
+                el.style.pointerEvents = pageP >= 0.99 ? 'auto' : 'none';
+            });
+
+            const domIdx  = Math.min(Math.round(p), pages.length - 1);
+            const domPage = pages[domIdx];
+            document.body.className = bodyClass[domPage];
+            document.querySelectorAll('.nav-link').forEach(a => {
+                a.classList.toggle('active', a.dataset.target === domPage);
+            });
+        }
+
+        function scheduleSnap() {
+            clearTimeout(snapTimer);
+            snapTimer = setTimeout(() => {
+                totalProgress = Math.max(0, Math.min(pages.length - 1, Math.round(totalProgress)));
+                applyProgress(totalProgress, true);
+            }, 160);
+        }
+
+        function onScroll(delta) {
+            if (Date.now() < INTRO_END) return;
+            clearTimeout(snapTimer);
+            totalProgress = Math.max(0, Math.min(pages.length - 1, totalProgress + delta / SENS));
+            applyProgress(totalProgress, false);
+            scheduleSnap();
+        }
+
+        window.addEventListener('wheel', e => {
+            e.preventDefault();
+            onScroll(e.deltaY);
+        }, { passive: false });
+
+        let touchY = null;
+        window.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
+        window.addEventListener('touchmove', e => {
+            if (touchY === null) return;
+            e.preventDefault();
+            onScroll(touchY - e.touches[0].clientY);
+            touchY = e.touches[0].clientY;
+        }, { passive: false });
+        window.addEventListener('touchend', () => { touchY = null; scheduleSnap(); }, { passive: true });
+
+        document.querySelectorAll('.nav-link').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                clearTimeout(snapTimer);
+                totalProgress = pages.indexOf(a.dataset.target);
+                applyProgress(totalProgress, true);
+            });
+        });
+    </script>
+</body>
 </html>
